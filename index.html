@@ -232,6 +232,11 @@ article.kw.rt .def ul { margin: 4px 0; }
 @keyframes flash { 0%, 30% { background: var(--bronze-soft); box-shadow: 0 0 0 6px var(--bronze-soft); } 100% { background: transparent; box-shadow: 0 0 0 6px transparent; } }
 
 .kt-sub { font-family: var(--display); font-weight: 400; font-size: 26px; letter-spacing: .03em; margin: 40px 0 6px; padding-top: 18px; border-top: 2px solid var(--bronze); }
+.kt-sub span { font: 500 15px var(--ui); color: var(--muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; margin-left: 4px; }
+.kt-sub.first { margin-top: 26px; }
+.tab .short { display: none; }
+@media (max-width: 720px) { .tab .long { display: none; } .tab .short { display: inline; } }
+.ktjump { margin-bottom: 14px; }
 .awnav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
 .awnav a { font: 600 13px var(--ui); letter-spacing: .06em; text-transform: uppercase; color: var(--bronze); text-decoration: none; border: 1px solid var(--bronze-soft); border-radius: 99px; padding: 4px 12px; }
 .awnav a:hover { background: var(--bronze-soft); }
@@ -325,7 +330,7 @@ article.kw.rb .def ul { margin: 4px 0; }
     </div>
     <div class="tabs" role="tablist" aria-label="View">
       <button class="tab" role="tab" id="tab-keywords" type="button" data-view="keywords">Keywords &amp; terms<span class="n" id="n-keywords"></span></button>
-      <button class="tab" role="tab" id="tab-kratos" type="button" data-view="kratos">Kratos Table<span class="n" id="n-kratos"></span></button>
+      <button class="tab" role="tab" id="tab-kratos" type="button" data-view="kratos" aria-label="Kratos &amp; Ability Windows"><span class="long">Kratos &amp; Ability Windows</span><span class="short">Kratos &amp; Windows</span></button>
       <button class="tab" role="tab" id="tab-rules" type="button" data-view="rules">Cycle Rules<span class="n" id="n-rules"></span></button>
     </div>
     <div class="searchrow">
@@ -341,10 +346,12 @@ article.kw.rb .def ul { margin: 4px 0; }
 
   <section class="body" id="kratosView" hidden style="grid-template-columns:minmax(0,1fr)">
     <div>
+      <nav class="awnav ktjump" id="ktjump" aria-label="On this page"></nav>
       <div class="rbbox" id="ktrb"></div>
+      <h2 class="kt-sub first" id="kratos-table">Kratos Table abilities <span id="kt-n"></span></h2>
       <p class="kt-intro">The Kratos Table abilities as printed in the reference boxes of the keyword books. These are short table wordings; the linked glossary entry has the full rule.</p>
       <div class="kt-grid" id="kratos"></div>
-      <h2 class="kt-sub" id="ability-windows">Ability window keywords</h2>
+      <h2 class="kt-sub" id="ability-windows">Ability window keywords <span id="aw-n"></span></h2>
       <p class="kt-intro">Every keyword in the switched-on Cycles whose wording mentions an ability window, grouped by the window it names, with its icon and the Kratos tokens it refers to. Hover or tap a symbol to enlarge it; tap a name to open it in the glossary.</p>
       <nav class="awnav" id="awnav" aria-label="Ability windows"></nav>
       <div id="awin"></div>
@@ -887,7 +894,7 @@ function observeSections() { if (!tocObserver) return; tocObserver.disconnect();
 function renderKratos(terms) {
   const vis = KT.filter(a => on.has(a.intro));
   const shown = vis.filter(a => terms.every(t => (a.name + " " + a.h.replace(/<[^>]+>/g, " ")).toLowerCase().includes(t)));
-  document.getElementById("n-kratos").textContent = vis.length;
+  document.getElementById("kt-n").textContent = terms.length ? `${shown.length} of ${vis.length}` : vis.length;
   const el = document.getElementById("kratos");
   el.innerHTML = shown.length ? shown.map(a => {
     const ci = ORDER.indexOf(a.intro) + 1;
@@ -947,6 +954,7 @@ function tokensOf(k) {
   if (/^Truth X$/.test(k.name)) for (const n of ["Break token", "Opening token", "Fire token", "Closing token", "Black token"]) if (!found.includes(n)) found.push(n);
   return found;
 }
+let AW_TOTAL = 0;
 function renderAwin(terms) {
   const el = document.getElementById("awin");
   const nav = document.getElementById("awnav");
@@ -957,6 +965,11 @@ function renderAwin(terms) {
     for (const g of awinGroupsOf(k)) groups[g].push(k);
   }
   nav.innerHTML = AW_GROUPS.map(([id, label]) => `<a href="#aw-${id}">${label} <span>${groups[id].length}</span></a>`).join("");
+  const awTotal = new Set([...groups.first, ...groups.second, ...groups.either]).size;
+  document.getElementById("aw-n").textContent = awTotal;
+  const ktShown = document.querySelectorAll("#kratos .kt").length;
+  document.getElementById("ktjump").innerHTML = `<a href="#kratos-table">Kratos Table abilities <span>${ktShown}</span></a><a href="#ability-windows">Ability window keywords <span>${awTotal}</span></a>`;
+  AW_TOTAL = awTotal;
   el.innerHTML = AW_GROUPS.map(([id, label, sub]) => {
     const ks = groups[id];
     if (!ks.length) return "";
@@ -980,7 +993,7 @@ function setView(v) {
   document.getElementById("kratosView").hidden = v !== "kratos";
   document.getElementById("rulesView").hidden = v !== "rules";
   document.getElementById("hint").hidden = false;
-  qEl.placeholder = v === "kratos" ? "Search Kratos abilities" : v === "rules" ? "Search the rules of switched-on Cycles" : "Search keywords or rules text";
+  qEl.placeholder = v === "kratos" ? "Search Kratos abilities & keywords" : v === "rules" ? "Search the rules of switched-on Cycles" : "Search keywords or rules text";
 }
 const baseRender = render;
 render = function () {
@@ -991,7 +1004,7 @@ render = function () {
   if (view === "kratos") {
     const vis = KT.filter(a => on.has(a.intro));
     const n = document.querySelectorAll("#kratos .kt").length;
-    document.getElementById("count").textContent = q ? `${n} of ${vis.length} abilities` : `${vis.length} abilities`;
+    document.getElementById("count").textContent = `${q ? n + " of " + vis.length : vis.length} Kratos abilities · ${AW_TOTAL} ability-window keywords`;
   }
   renderRules(q ? q.split(/\s+/).filter(Boolean) : []);
   if (view === "rules") observeSections();
