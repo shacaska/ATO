@@ -317,7 +317,7 @@ i.ri.maskbig { display: block; background: var(--ink); -webkit-mask-size: contai
       <span class="count" id="count"></span>
     </div>
     <div class="cycles" id="cycles" role="group" aria-label="Cycles"></div>
-    <p class="hint" id="hint">Switching a Cycle off hides the keywords that first appear in that Cycle's book and that Cycle's rules. Definitions follow the newest Cycle you have switched on. <button id="allOn" type="button">Show all Cycles</button></p>
+    <p class="hint" id="hint">Switch on the Cycles you have reached. Switched-off Cycles hide their keywords and rules, and definitions follow the newest Cycle you have on. Your selection is remembered in this browser. <button id="allOn" type="button">Show all Cycles</button></p>
   </header>
 
   <section class="body" id="kratosView" hidden style="grid-template-columns:minmax(0,1fr)">
@@ -383,9 +383,11 @@ function markImgGlyphs(root) {
 }
 
 /* state */
-let on = new Set(ORDER);
-try { const s = JSON.parse(localStorage.getItem("ato-codex-cycles")); if (Array.isArray(s)) on = new Set(s.filter(c => ORDER.includes(c))); } catch (e) {}
-const save = () => { try { localStorage.setItem("ato-codex-cycles", JSON.stringify([...on])); } catch (e) {} };
+// first visit shows Cycle I only; after that the last selection is remembered in this browser
+const CYC_KEY = "ato-codex-cycles-v2";
+let on = new Set(["I"]);
+try { const s = JSON.parse(localStorage.getItem(CYC_KEY)); if (Array.isArray(s)) on = new Set(s.filter(c => ORDER.includes(c))); } catch (e) {}
+const save = () => { try { localStorage.setItem(CYC_KEY, JSON.stringify([...on])); } catch (e) {} };
 
 /* cycle buttons */
 const introCount = c => DATA.keywords.filter(k => k.intro === c).length;
