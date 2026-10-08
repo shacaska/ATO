@@ -423,9 +423,9 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
 @media (max-width: 720px) {
   .tabs { display: none; }
   .fback, #rbBack { display: none !important; }
-  .bnav { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--surface); border-top: 1px solid var(--rule); padding: 3px 2px calc(3px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 18px rgba(0,0,0,.08); }
+  .bnav { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1.4fr) minmax(0, 1.05fr) minmax(0, .75fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--surface); border-top: 1px solid var(--rule); padding: 3px 2px calc(3px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 18px rgba(0,0,0,.08); }
   .bnav button { display: grid; justify-items: center; gap: 2px; min-width: 0; background: none; border: 0; color: var(--muted); font: 600 10.5px var(--ui); letter-spacing: .03em; text-transform: uppercase; padding: 6px 0 4px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .bnav button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bnav button span { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .bnav svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   .bnav button[aria-current="page"] { color: var(--bronze); }
   .bnav button:disabled { opacity: .35; cursor: default; }
@@ -433,6 +433,7 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
   .toast { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
   .rbtoc.open { max-height: calc(100vh - 170px); }
 }
+@media (max-width: 380px) { .bnav button { font-size: 9.5px; letter-spacing: 0; } .bnav { grid-template-columns: minmax(0, .85fr) minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.3fr) minmax(0, 1.05fr) minmax(0, .85fr); } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 </style>
 
@@ -517,14 +518,14 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
     <nav class="rail" id="rail" aria-label="Jump to letter"></nav>
     <main><div class="kfilter" id="kfilter" role="group" aria-label="Show"></div><div id="list"></div></main>
   </div>
-  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.08-525a50</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
+  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.08-ef1359</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
 </div>
 <button type="button" class="fback" id="fBack" hidden>← Back</button>
 <nav class="bnav" id="bnav" aria-label="App navigation">
   <button type="button" id="bnBack" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg><span>Back</span></button>
   <button type="button" data-view="keywords"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h10.5a2 2 0 0 1 2 2v13H8a2 2 0 0 1-2-2z"/><path d="M6 17.5a2 2 0 0 1 2-2h10.5M9.5 8.5h5.5M9.5 11.5h4"/></svg><span>Keywords</span></button>
   <button type="button" data-view="kratos"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 10h16M10 10v10"/></svg><span>Kratos</span></button>
-  <button type="button" data-view="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7.5l3.5 3.5v13.5H7z"/><path d="M14.5 3.5V7H18M10 11h5M10 14h5M10 17h3"/></svg><span>Rules</span></button>
+  <button type="button" data-view="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7.5l3.5 3.5v13.5H7z"/><path d="M14.5 3.5V7H18M10 11h5M10 14h5M10 17h3"/></svg><span>Cycle Rules</span></button>
   <button type="button" data-view="rulebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5.5H9a3 3 0 0 1 3 3v11a2.5 2.5 0 0 0-2.5-2.5h-6z"/><path d="M20.5 5.5H15a3 3 0 0 0-3 3v11a2.5 2.5 0 0 1 2.5-2.5h6z"/></svg><span>Rulebook</span></button>
   <button type="button" id="bnSearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></svg><span>Search</span></button>
 </nav>
@@ -1718,7 +1719,7 @@ NAV_READY = true;
 
 function flashEl(el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 /* ---------- version and updates ---------- */
-const BUILD = "2026.10.08-525a50";
+const BUILD = "2026.10.08-ef1359";
 function showUpdate() { document.getElementById("updToast").hidden = false; }
 document.getElementById("updReload").addEventListener("click", () => location.reload());
 document.getElementById("updClose").addEventListener("click", () => { document.getElementById("updToast").hidden = true; });
