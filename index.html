@@ -404,6 +404,33 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
 .rbsearch li .p small { font: 500 11.5px var(--ui); letter-spacing: .02em; text-transform: none; color: var(--muted); }
 .rbhl .hit.cur { background: rgba(255,120,0,.55); outline: 2px solid #d9480f; outline-offset: 1px; border-radius: 2px; mix-blend-mode: multiply; animation: rbcur 1.2s ease-out 1; }
 @keyframes rbcur { 0% { box-shadow: 0 0 0 8px rgba(255,120,0,.45); } 100% { box-shadow: 0 0 0 0 rgba(255,120,0,0); } }
+
+/* search box lives in the pinned Rulebook toolbar */
+.rbqslot { flex: 1 1 220px; min-width: 0; display: flex; }
+.rbqslot .search { flex: 1; min-width: 0; }
+.rbqslot .search input { padding: 6px 30px 6px 10px; font-size: 15.5px; }
+.rbfind { border-color: var(--rule); }
+.rbfind.active { border-color: var(--bronze); }
+.rbfind.none { border-color: var(--red); }
+.rbfind .q { display: none; }
+.rbfind .n { flex: 0 1 auto; }
+.rbfind .n:empty { display: none; }
+.rbfind .sm { display: none; }
+@media (max-width: 720px) {
+  .rbfind .lg { display: none; }
+  .rbfind .sm { display: inline; }
+  .rbqslot { flex-basis: 120px; }
+}
+/* Cycle rule-book tabs stay pinned under the header */
+.rtabs { position: sticky; top: var(--hh, 256px); z-index: 4; background: var(--bg); padding: 8px 0 10px; margin: -8px 0 10px; border-bottom: 1px solid var(--rule); }
+.rtab[aria-selected="true"] { background: color-mix(in srgb, var(--c) 13%, var(--surface)); }
+.tocwrap { top: calc(var(--hh, 256px) + var(--rth, 64px) + 10px); }
+.toc { max-height: calc(100vh - var(--hh, 256px) - var(--rth, 64px) - 30px); }
+html[data-view="rules"] { scroll-padding-top: calc(var(--hh, 256px) + var(--rth, 64px) + 12px); }
+@media (max-width: 720px) {
+  .rtabs { top: 0; padding-top: 6px; }
+  html[data-view="rules"] { scroll-padding-top: calc(var(--rth, 56px) + 10px); }
+}
 @media (min-width: 861px) { #rbTocBtn { display: none; } }
 @media (max-width: 860px) {
   .rbwrap { grid-template-columns: minmax(0, 1fr); gap: 8px; }
@@ -509,12 +536,13 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
       </div>
       <span class="spacer"></span>
       <a class="rbbtn rbopen" id="rbOpen" href="#" target="_blank" rel="noopener">Open PDF</a>
-      <div class="rbfind" id="rbfind" role="status" aria-live="polite" hidden>
+      <div class="rbfind" id="rbfind" hidden>
+        <span class="rbqslot" id="rbqslot"></span>
         <span class="q" id="rbfindq"></span>
-        <span class="n" id="rbfindn"></span>
+        <span class="n" id="rbfindn" role="status" aria-live="polite"></span>
         <button type="button" class="rbbtn icon" id="rbFindPrev" aria-label="Previous match" title="Previous match (Shift+Enter)">↑</button>
         <button type="button" class="rbbtn icon" id="rbFindNext" aria-label="Next match" title="Next match (Enter)">↓</button>
-        <button type="button" class="rbbtn" id="rbFindList" aria-expanded="false" aria-controls="rbsearch">Pages</button>
+        <button type="button" class="rbbtn" id="rbFindList" aria-expanded="false" aria-controls="rbsearch" aria-label="Pages with matches"><span class="lg">Pages</span><span class="sm" aria-hidden="true">☰</span></button>
         <button type="button" class="rbbtn icon" id="rbFindClear" aria-label="Clear search">×</button>
       </div>
       <div class="rbsearch" id="rbsearch" hidden></div>
@@ -544,7 +572,7 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
     <nav class="rail" id="rail" aria-label="Jump to letter"></nav>
     <main><div class="kfilter" id="kfilter" role="group" aria-label="Show"></div><div id="list"></div></main>
   </div>
-  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.12-dd872e</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
+  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.12-d262f7</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
 </div>
 <button type="button" class="fback" id="fBack" hidden>← Back</button>
 <nav class="bnav" id="bnav" aria-label="App navigation">
@@ -1000,6 +1028,7 @@ function sectionHTML0(c, sec, terms, showCycle) {
 const rtabsEl = document.getElementById("rtabs");
 const tocEl = document.getElementById("toc");
 const rmainEl = document.getElementById("rmain");
+if ("ResizeObserver" in window) new ResizeObserver(() => document.documentElement.style.setProperty("--rth", rtabsEl.offsetHeight + "px")).observe(rtabsEl);
 function enabledRuleCycles() { return RULES.cycles.filter(c => on.has(c.id)); }
 function renderRules(terms) {
   const avail = enabledRuleCycles();
@@ -1184,6 +1213,11 @@ function setView(v) {
   document.getElementById("rulebookView").hidden = v !== "rulebook";
   document.getElementById("hint").hidden = v === "rulebook";
   document.getElementById("cycles").hidden = v === "rulebook";
+  const lab = qEl.closest("label.search"), srow = document.querySelector(".searchrow");
+  if (v === "rulebook") document.getElementById("rbqslot").appendChild(lab);
+  else if (lab.parentNode !== srow) srow.insertBefore(lab, srow.firstChild);
+  srow.hidden = v === "rulebook";
+  document.documentElement.dataset.view = v;
   qEl.placeholder = v === "kratos" ? "Search Kratos abilities & keywords" : v === "rules" ? "Search the rules of switched-on Cycles" : v === "rulebook" ? "Search the Rulebook" : "Search keywords or rules text";
   document.querySelectorAll("#bnav [data-view]").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
   if (window.NAV_READY) navUI();
@@ -1357,6 +1391,7 @@ function rbEnsure() {
     rbStatus(got.saved ? `<div>Saved on this device, so the Rulebook now opens instantly and works offline.</div>` : "");
     if (got.saved) setTimeout(() => { if (rbStatusEl.textContent.startsWith("Saved")) rbStatus(""); }, 6000);
     buildPages();
+    setTimeout(() => { (window.requestIdleCallback || (f => f()))(() => rbText().catch(() => {})); }, 1500);   // index the text early so the first search is instant
     if (view === "rulebook" && !qEl.value.trim()) document.getElementById("count").textContent = `${RBV.doc.numPages - 1} pages`;
   })().catch(err => { RBV.loading = null; rbFail(err); throw err; });
   return RBV.loading;
@@ -1580,8 +1615,16 @@ const repaintHits = () => RBV.els.forEach(paintHits);
 function findUI(busy) {
   const box = document.getElementById("rbfind"), n = document.getElementById("rbfindn"), shown = qEl.value.trim(), q = shown.toLowerCase();
   const countEl = document.getElementById("count");
-  box.hidden = !q || view !== "rulebook";
-  if (box.hidden) { rbSearchEl.hidden = true; document.getElementById("rbFindList").setAttribute("aria-expanded", "false"); return; }
+  box.hidden = view !== "rulebook";
+  if (box.hidden || !q) { rbSearchEl.hidden = true; document.getElementById("rbFindList").setAttribute("aria-expanded", "false"); }
+  if (box.hidden) return;
+  box.classList.toggle("active", !!q);
+  document.getElementById("rbFindClear").hidden = !q;
+  if (!q) {
+    n.innerHTML = ""; box.classList.remove("none");
+    for (const id of ["rbFindPrev", "rbFindNext", "rbFindList"]) document.getElementById(id).disabled = true;
+    return;
+  }
   document.getElementById("rbfindq").textContent = `“${shown}”`;
   const total = RBV.matches.length, pages = RBV.byPage ? RBV.byPage.size : 0;
   const ready = !busy && RBV.q === q;
@@ -1669,7 +1712,7 @@ document.getElementById("rbFindList").addEventListener("click", e => {
   rbSearchEl.hidden = !open; e.currentTarget.setAttribute("aria-expanded", open);
   if (open) findList();
 });
-document.getElementById("rbFindClear").addEventListener("click", () => { qEl.value = ""; render(); });
+document.getElementById("rbFindClear").addEventListener("click", () => { qEl.value = ""; render(); if (!isPhone()) qEl.focus(); });
 rbSearchEl.addEventListener("click", e => {
   const b = e.target.closest("button[data-mi]");
   if (!b) return;
@@ -1816,7 +1859,8 @@ document.getElementById("bnav").addEventListener("click", e => {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.id === "bnBack") { navBack(); return; }
-  if (b.id === "bnSearch") { if (view === "rulebook" && window.RB_READY && RBV.searchFrom == null) RBV.searchFrom = RBV.cur; window.scrollTo(0, 0); qEl.focus({ preventScroll: true }); qEl.select(); return; }
+  if (b.id === "bnSearch" && view === "rulebook") { qEl.focus({ preventScroll: true }); qEl.select(); return; }
+  if (b.id === "bnSearch") { window.scrollTo(0, 0); qEl.focus({ preventScroll: true }); qEl.select(); return; }
   if (b.dataset.view === view) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
   document.getElementById("tab-" + b.dataset.view).click();
 });
@@ -1824,7 +1868,7 @@ NAV_READY = true;
 
 function flashEl(el) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
 /* ---------- version and updates ---------- */
-const BUILD = "2026.10.12-dd872e";
+const BUILD = "2026.10.12-d262f7";
 function showUpdate() { document.getElementById("updToast").hidden = false; }
 document.getElementById("updReload").addEventListener("click", () => location.reload());
 document.getElementById("updClose").addEventListener("click", () => { document.getElementById("updToast").hidden = true; });
