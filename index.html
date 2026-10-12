@@ -376,20 +376,34 @@ article.kw.rb .def ul { margin: 4px 0; }
 .rbstatus .box { padding: 16px 18px; border: 1px dashed var(--muted); border-radius: 3px; max-width: 62ch; display: grid; gap: 8px; }
 .rbstatus .box p { margin: 0; }
 .rbstatus a { color: var(--bronze); }
-.rbsearch { margin-bottom: 14px; font: 500 14.5px var(--ui); }
-.rbsearch .hd { color: var(--muted); margin-bottom: 6px; }
-.rbsearch ol { list-style: none; margin: 0; padding: 4px 0; max-height: 42vh; overflow-y: auto; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
-.rbsearch li a { display: grid; grid-template-columns: 5.2em minmax(0, 1fr); gap: 10px; padding: 5px 12px; color: var(--ink); text-decoration: none; font: 16px/1.4 var(--body); }
-.rbsearch li a:hover { background: var(--bronze-soft); }
-.rbsearch li .p { font: 600 12.5px var(--ui); letter-spacing: .06em; text-transform: uppercase; color: var(--bronze); padding-top: 2px; }
 .rbcredit { font: 500 13px var(--ui); color: var(--muted); margin: 18px 0 0; text-align: center; }
 .rbcredit a { color: var(--bronze); }
 a.rbp { color: var(--bronze); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
 .pgref a.rbp { color: inherit; }
-.rbtoc a.rbp, .rbsearch a.rbp { color: var(--ink); text-decoration: none; }
+.rbtoc a.rbp { color: var(--ink); text-decoration: none; }
 .rbtoc a.rbp.cur { color: var(--bronze); }
 a.chip.rbchip { text-decoration: none; }
 a.chip.rbchip:hover { border-color: var(--bronze); }
+
+/* Rulebook find bar */
+.rbfind { flex: 1 0 100%; display: flex; align-items: center; gap: 6px 8px; padding: 6px 8px; margin-top: 2px; background: var(--surface); border: 1px solid var(--bronze); border-radius: 4px; font: 500 14.5px var(--ui); min-width: 0; }
+.rbfind .q { font-weight: 600; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 40%; }
+.rbfind .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); font-variant-numeric: tabular-nums; }
+.rbfind .n b { font-weight: 700; color: var(--bronze); }
+.rbfind .n .pg, .rbfind .n .busy { color: var(--muted); }
+.rbfind.none { border-color: var(--red); }
+.rbfind.none .n { color: var(--red); font-weight: 600; }
+.rbfind .rbbtn:disabled { opacity: .4; cursor: default; }
+.rbfind .rbbtn.icon { font-size: 15px; }
+@media (max-width: 720px) { .rbfind .n .pg { display: none; } .rbfind { gap: 6px; padding: 5px 6px; } }
+.rbsearch { position: absolute; left: 0; right: 0; top: 100%; z-index: 7; margin: 0; max-height: min(60vh, 520px); overflow-y: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; box-shadow: 0 12px 30px rgba(0,0,0,.22); }
+.rbsearch ol { list-style: none; margin: 0; padding: 4px 0; }
+.rbsearch li button { display: grid; grid-template-columns: 6.2em minmax(0, 1fr); gap: 10px; width: 100%; padding: 6px 12px; border: 0; background: none; text-align: left; color: var(--ink); font: 16px/1.4 var(--body); cursor: pointer; }
+.rbsearch li button:hover, .rbsearch li button[aria-current] { background: var(--bronze-soft); }
+.rbsearch li .p { font: 600 12.5px var(--ui); letter-spacing: .06em; text-transform: uppercase; color: var(--bronze); padding-top: 3px; display: grid; gap: 1px; }
+.rbsearch li .p small { font: 500 11.5px var(--ui); letter-spacing: .02em; text-transform: none; color: var(--muted); }
+.rbhl .hit.cur { background: rgba(255,120,0,.55); outline: 2px solid #d9480f; outline-offset: 1px; border-radius: 2px; mix-blend-mode: multiply; animation: rbcur 1.2s ease-out 1; }
+@keyframes rbcur { 0% { box-shadow: 0 0 0 8px rgba(255,120,0,.45); } 100% { box-shadow: 0 0 0 0 rgba(255,120,0,0); } }
 @media (min-width: 861px) { #rbTocBtn { display: none; } }
 @media (max-width: 860px) {
   .rbwrap { grid-template-columns: minmax(0, 1fr); gap: 8px; }
@@ -423,11 +437,15 @@ a.chip.rbchip:hover { border-color: var(--bronze); }
 @media (max-width: 720px) {
   .tabs { display: none; }
   .fback, #rbBack { display: none !important; }
-  .bnav { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1.4fr) minmax(0, 1.05fr) minmax(0, .75fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--surface); border-top: 1px solid var(--rule); padding: 3px 2px calc(3px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 18px rgba(0,0,0,.08); }
+  .bnav { display: grid; align-items: start; grid-template-columns: minmax(0, .75fr) minmax(0, 1.1fr) minmax(0, .95fr) minmax(0, 1.4fr) minmax(0, 1.05fr) minmax(0, .75fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--surface); border-top: 1px solid var(--rule); padding: 3px 2px calc(3px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -4px 18px rgba(0,0,0,.08); }
   .bnav button { display: grid; justify-items: center; gap: 2px; min-width: 0; background: none; border: 0; color: var(--muted); font: 600 10.5px var(--ui); letter-spacing: .03em; text-transform: uppercase; padding: 6px 0 4px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .bnav button span { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .bnav svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .bnav button[aria-current="page"] { color: var(--bronze); }
+  .bnav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .bnav button { position: relative; }
+  .bnav svg { box-sizing: content-box; padding: 3px 10px; border-radius: 99px; transition: background .15s, color .15s; }
+  .bnav button[aria-current="page"] { color: var(--ink); font-weight: 700; }
+  .bnav button[aria-current="page"] svg { background: var(--bronze); color: var(--surface); stroke-width: 2; }
+  .bnav button[aria-current="page"]::before { content: ""; position: absolute; top: -3px; left: 22%; right: 22%; height: 3px; border-radius: 0 0 3px 3px; background: var(--bronze); }
   .bnav button:disabled { opacity: .35; cursor: default; }
   body { padding-bottom: calc(62px + env(safe-area-inset-bottom, 0px)); }
   .toast { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
@@ -555,11 +573,19 @@ i.bsym { display: inline-block; height: 1.1em; width: calc(1.1em * var(--ar, 1))
       </div>
       <span class="spacer"></span>
       <a class="rbbtn rbopen" id="rbOpen" href="#" target="_blank" rel="noopener">Open PDF</a>
+      <div class="rbfind" id="rbfind" role="status" aria-live="polite" hidden>
+        <span class="q" id="rbfindq"></span>
+        <span class="n" id="rbfindn"></span>
+        <button type="button" class="rbbtn icon" id="rbFindPrev" aria-label="Previous match" title="Previous match (Shift+Enter)">↑</button>
+        <button type="button" class="rbbtn icon" id="rbFindNext" aria-label="Next match" title="Next match (Enter)">↓</button>
+        <button type="button" class="rbbtn" id="rbFindList" aria-expanded="false" aria-controls="rbsearch">Pages</button>
+        <button type="button" class="rbbtn icon" id="rbFindClear" aria-label="Clear search">×</button>
+      </div>
+      <div class="rbsearch" id="rbsearch" hidden></div>
     </div>
     <div class="rbwrap">
       <nav class="rbtoc" id="rbtoc" aria-label="Rulebook contents"></nav>
       <div class="rbmain">
-        <div class="rbsearch" id="rbsearch" hidden></div>
         <div class="rbstatus" id="rbstatus"></div>
         <div class="rbpages" id="rbpages"></div>
         <p class="rbcredit">Aeon Trespass: Odyssey Core Rulebook v1.1 © Into the Unknown, shown unchanged. <a href="https://drive.google.com/file/d/1vPofVQlG_j_nA3v63YWnU9WsMovJ-uxb/view" target="_blank" rel="noopener">Official copy</a></p>
@@ -582,7 +608,7 @@ i.bsym { display: inline-block; height: 1.1em; width: calc(1.1em * var(--ar, 1))
     <nav class="rail" id="rail" aria-label="Jump to letter"></nav>
     <main><div class="kfilter" id="kfilter" role="group" aria-label="Show"></div><div id="list"></div></main>
   </div>
-  <footer class="foot">Odyssey Codex · version <span id="buildVer">battles-6f5ed9</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
+  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.12-dd872e</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
 </div>
 <button type="button" class="fback" id="fBack" hidden>← Back</button>
 <nav class="bnav" id="bnav" aria-label="App navigation">
@@ -1305,6 +1331,7 @@ function setView(v) {
   document.querySelectorAll("#bnav [data-view]").forEach(b => { if (b.dataset.view === v) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
   if (window.NAV_READY) navUI();
   if (v === "rulebook" && window.RB_READY) rbShow();
+  if (window.RB_READY) findUI();
 }
 const baseRender = render;
 render = function () {
@@ -1600,7 +1627,8 @@ function rbGoto(p, loc, opts = {}) {
         el.querySelector(".rbhl").appendChild(d);
       }
     }
-    const top = el.getBoundingClientRect().top + window.scrollY + el.offsetHeight * y - stickyTop() - (y ? 28 : 12);
+    const top = el.getBoundingClientRect().top + window.scrollY + el.offsetHeight * y - stickyTop() - (opts.pad != null ? opts.pad : y ? 28 : 12);
+    if (opts.x != null && rbPagesEl.scrollWidth > rbPagesEl.clientWidth + 2) rbPagesEl.scrollLeft = el.offsetLeft + el.offsetWidth * opts.x / RBV.pw - rbPagesEl.clientWidth / 2;
     RBV.lockUntil = Date.now() + 400;
     window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
   }).catch(() => {});
@@ -1625,7 +1653,9 @@ if ("ResizeObserver" in window) {
   new ResizeObserver(() => document.documentElement.style.setProperty("--rbh", document.getElementById("rbbar").offsetHeight + "px")).observe(document.getElementById("rbbar"));
 }
 
-/* search inside the Rulebook */
+/* search inside the Rulebook: find-in-page with match navigation */
+RBV.q = ""; RBV.matches = []; RBV.byPage = null; RBV.mi = -1; RBV.qStart = 0; RBV.pendingJump = false;
+const isPhone = () => matchMedia("(max-width: 720px)").matches;
 function rbText() {
   if (RBV.textP) return RBV.textP;
   RBV.textP = (async () => {
@@ -1649,75 +1679,150 @@ function rbText() {
 }
 const measureCtx = document.createElement("canvas").getContext("2d");
 function textW(str, fam) { measureCtx.font = `100px ${fam || "serif"}`; return measureCtx.measureText(str).width || 1; }
+const escRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escHTML = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function rbMatches(text, q) {
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const re = new RegExp(words.map(escRe).join("\\s+"), "g");
+  const out = [];
+  text.forEach((pg, p) => {
+    if (rbSealed(p)) return;
+    const found = [];
+    re.lastIndex = 0;
+    let m;
+    while ((m = re.exec(pg.lower))) {
+      const s = m.index, e = s + m[0].length, rects = [];
+      for (const [o, it] of pg.items) {
+        const L = it.str.length;
+        if (o >= e || o + L <= s) continue;
+        const t = it.transform;
+        if (Math.abs(t[1]) > 0.01 || Math.abs(t[2]) > 0.01) continue;
+        const a = Math.max(s, o) - o, b = Math.min(e, o + L) - o, fam = it.fam, full = textW(it.str, fam), fh = Math.abs(t[3]);
+        rects.push([t[4] + it.width * textW(it.str.slice(0, a), fam) / full, RBV.ph - t[5] - fh * 0.85, it.width * textW(it.str.slice(a, b), fam) / full, fh * 1.1]);
+      }
+      if (rects.length) found.push({ p, rects, s, e, col: rects[0][0] > RBV.pw / 2 ? 1 : 0, y: rects[0][1] });
+      if (!m[0].length) re.lastIndex++;
+    }
+    found.sort((a, b) => a.col - b.col || a.y - b.y);   // reading order: left column, then right
+    out.push(...found);
+  });
+  return out;
+}
 function paintHits(el) {
   const hl = el.querySelector(".rbhl");
   hl.querySelectorAll(".hit").forEach(h => h.remove());
-  if (!RBV.terms.length || !RBV.text) return;
-  const pg = RBV.text[+el.dataset.p];
-  if (!pg) return;
+  const idx = RBV.byPage && RBV.byPage.get(+el.dataset.p);
+  if (!idx) return;
   let html = "";
-  for (const [, it] of pg.items) {
-    const t = it.transform;
-    if (Math.abs(t[1]) > 0.01 || Math.abs(t[2]) > 0.01) continue;
-    const low = it.str.toLowerCase(), fh = Math.abs(t[3]), fam = it.fam, full = textW(it.str, fam);
-    for (const term of RBV.terms) {
-      let i = low.indexOf(term);
-      while (i >= 0) {
-        const x = t[4] + it.width * textW(it.str.slice(0, i), fam) / full, w = it.width * textW(it.str.slice(i, i + term.length), fam) / full, top = RBV.ph - t[5] - fh * 0.85;
-        html += `<i class="hit" style="left:${x / RBV.pw * 100}%;width:${w / RBV.pw * 100}%;top:${top / RBV.ph * 100}%;height:${fh * 1.1 / RBV.ph * 100}%"></i>`;
-        i = low.indexOf(term, i + term.length);
-      }
-    }
-  }
+  for (const i of idx) for (const [x, y, w, h] of RBV.matches[i].rects)
+    html += `<i class="hit${i === RBV.mi ? " cur" : ""}" style="left:${x / RBV.pw * 100}%;width:${w / RBV.pw * 100}%;top:${y / RBV.ph * 100}%;height:${h / RBV.ph * 100}%"></i>`;
   hl.insertAdjacentHTML("beforeend", html);
 }
-function firstHitY(p) {
-  const pg = RBV.text && RBV.text[p];
-  if (!pg) return null;
-  for (const [, it] of pg.items) {
-    const low = it.str.toLowerCase();
-    if (RBV.terms.some(t => low.includes(t))) return RBV.ph - it.transform[5] - Math.abs(it.transform[3]);
-  }
-  return null;
+const repaintHits = () => RBV.els.forEach(paintHits);
+function findUI(busy) {
+  const box = document.getElementById("rbfind"), n = document.getElementById("rbfindn"), shown = qEl.value.trim(), q = shown.toLowerCase();
+  const countEl = document.getElementById("count");
+  box.hidden = !q || view !== "rulebook";
+  if (box.hidden) { rbSearchEl.hidden = true; document.getElementById("rbFindList").setAttribute("aria-expanded", "false"); return; }
+  document.getElementById("rbfindq").textContent = `“${shown}”`;
+  const total = RBV.matches.length, pages = RBV.byPage ? RBV.byPage.size : 0;
+  const ready = !busy && RBV.q === q;
+  box.classList.toggle("none", ready && !total);
+  if (!ready) n.innerHTML = `<span class="busy">Searching…</span>`;
+  else if (!total) n.innerHTML = `No matches${revealed.has(MNESTIS_KEY) ? "" : `<span class="pg"> · spoiler pages not searched</span>`}`;
+  else n.innerHTML = `<b>${RBV.mi + 1}</b> of ${total}<span class="pg"> · ${pages} page${pages === 1 ? "" : "s"}</span>`;
+  for (const id of ["rbFindPrev", "rbFindNext", "rbFindList"]) document.getElementById(id).disabled = !ready || !total;
+  if (ready) countEl.textContent = total ? `${total} match${total === 1 ? "" : "es"} on ${pages} page${pages === 1 ? "" : "s"}` : "No matches";
+}
+function findList() {
+  const groups = [];
+  RBV.matches.forEach((m, i) => { const g = groups[groups.length - 1]; if (g && g.p === m.p) g.n++; else groups.push({ p: m.p, i, n: 1, s: m.s, e: m.e }); });
+  rbSearchEl.innerHTML = `<ol>${groups.map(g => {
+    const str = RBV.text[g.p].str, a = Math.max(0, g.s - 50);
+    const tidy = t => escHTML(t.replace(/\{[^}]*\}?|[^\s{}]*\}|[≠≈]/g, " ").replace(/\s+/g, " "));   // drop icon-font codes
+    const snip = (tidy(str.slice(a, g.s)) + `<mark>${tidy(str.slice(g.s, g.e))}</mark>` + tidy(str.slice(g.e, g.e + 90))).trim();
+    return `<li><button type="button" data-mi="${g.i}"${RBV.mi >= g.i && RBV.mi < g.i + g.n ? ' aria-current="true"' : ""}><span class="p">${rbLabel(g.p)}${g.n > 1 ? `<small>${g.n} matches</small>` : ""}</span><span>…${snip}…</span></button></li>`;
+  }).join("")}</ol>`;
+}
+function gotoMatch(i) {
+  const n = RBV.matches.length;
+  if (!n) return;
+  RBV.mi = ((i % n) + n) % n;
+  RBV.pendingJump = false; RBV.searchFrom = null;
+  const m = RBV.matches[RBV.mi];
+  const y0 = Math.min(...m.rects.map(r => r[1]));
+  rbGoto(m.p, [-1, y0, y0 + 12], { noHL: true, pad: Math.round((window.innerHeight - stickyTop()) * 0.33), x: m.rects[0][0] });
+  repaintHits(); findUI();
+  if (!rbSearchEl.hidden) findList();
 }
 let rbSearchT = 0;
-function rbSearch(q) {
-  const countEl = document.getElementById("count");
-  const terms = q ? q.split(/\s+/).filter(Boolean) : [];
-  RBV.terms = terms;
-  if (!terms.length) {
-    rbSearchEl.hidden = true; rbSearchEl.innerHTML = "";
-    countEl.textContent = RBV.doc ? `${RBV.doc.numPages - 1} pages` : "Core Rulebook v1.1";
-    RBV.els.forEach(el => el.dataset.gen && paintHits(el));
-    return;
+function rbSearch(q, opts = {}) {
+  q = (q || "").trim().toLowerCase();
+  if (!q) {
+    clearTimeout(rbSearchT); RBV.sq++;
+    if (RBV.q) { RBV.q = ""; RBV.matches = []; RBV.byPage = null; RBV.mi = -1; repaintHits(); }
+    findUI();
+    document.getElementById("count").textContent = RBV.doc ? `${RBV.doc.numPages - 1} pages` : "Core Rulebook v1.1";
+    return Promise.resolve();
   }
+  if (q === RBV.q && !opts.now) { findUI(); return Promise.resolve(); }
+  if (!RBV.q) RBV.qStart = RBV.searchFrom != null ? RBV.searchFrom : RBV.cur;   // a new search starts from the page you were reading
   clearTimeout(rbSearchT);
   const my = ++RBV.sq;
-  rbSearchT = setTimeout(async () => {
-    if (!RBV.text) { rbSearchEl.hidden = false; rbSearchEl.innerHTML = `<div class="hd">Indexing the Rulebook…</div>`; }
-    let text;
-    try { text = await rbText(); } catch (e) { return; }
-    if (my !== RBV.sq) return;
-    const hits = [];
-    text.forEach((pg, p) => {
-      if (rbSealed(p) || !terms.every(t => pg.lower.includes(t))) return;
-      const i = pg.lower.indexOf(terms[0]);
-      let snip = pg.str.slice(Math.max(0, i - 60), i + 110).replace(/\{[^}]*\}?|[^\s{}]*\}|[≠≈]/g, " ").replace(/\s+/g, " ").trim();
-      snip = snip.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
-      for (const t of terms) snip = snip.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), m => `<mark>${m}</mark>`);
-      hits.push([p, snip]);
-    });
-    countEl.textContent = `${hits.length} of ${text.length - 1} pages`;
-    rbSearchEl.hidden = false;
-    rbSearchEl.innerHTML = hits.length
-      ? `<div class="hd">${hits.length} page${hits.length === 1 ? "" : "s"} mention “${qEl.value.trim().replace(/</g, "&lt;")}”${!revealed.has(MNESTIS_KEY) ? " (spoiler pages not searched)" : ""}</div><ol>${hits.map(([p, sn]) => {
-          const y = firstHitY(p);
-          return `<li><a class="rbp" href="#rulebook-p${p}" data-rbp="${p}"${y != null ? ` data-loc="-1,${Math.round(y)},${Math.round(y) + 12}"` : ""}><span class="p">${rbLabel(p)}</span><span>…${sn}…</span></a></li>`;
-        }).join("")}</ol>`
-      : `<div class="hd">Nothing in the Rulebook matches “${qEl.value.trim().replace(/</g, "&lt;")}”.</div>`;
-    RBV.els.forEach(el => el.dataset.gen && paintHits(el));
-  }, RBV.text ? 120 : 0);
+  findUI(true);
+  return new Promise(res => {
+    rbSearchT = setTimeout(async () => {
+      let text;
+      try { text = await rbText(); } catch (e) { return res(); }
+      if (my !== RBV.sq) return res();
+      RBV.q = q;
+      RBV.matches = rbMatches(text, q);
+      RBV.byPage = new Map();
+      RBV.matches.forEach((m, i) => { if (!RBV.byPage.has(m.p)) RBV.byPage.set(m.p, []); RBV.byPage.get(m.p).push(i); });
+      let i = RBV.matches.findIndex(m => m.p >= RBV.qStart);
+      RBV.mi = RBV.matches.length ? (i < 0 ? 0 : i) : -1;
+      findUI();
+      if (!rbSearchEl.hidden) findList();
+      // jump straight to the match, except while typing on a phone (the keyboard would hide it): then jump on Go / when the keyboard closes
+      if (RBV.mi >= 0) { if (isPhone() && document.activeElement === qEl && !opts.now) { RBV.pendingJump = true; repaintHits(); } else gotoMatch(RBV.mi); }
+      else repaintHits();
+      res();
+    }, opts.now ? 0 : RBV.text ? 280 : 0);
+  });
 }
+qEl.addEventListener("keydown", async e => {
+  if (view !== "rulebook" || e.key !== "Enter") return;
+  e.preventDefault();
+  const q = qEl.value.trim().toLowerCase();
+  if (!q) return;
+  if (RBV.q !== q) await rbSearch(q, { now: true });
+  else gotoMatch(RBV.pendingJump ? RBV.mi : RBV.mi + (e.shiftKey ? -1 : 1));
+  if (isPhone()) qEl.blur();
+});
+qEl.addEventListener("blur", () => {
+  if (view !== "rulebook") return;
+  if (RBV.pendingJump && RBV.q === qEl.value.trim().toLowerCase()) gotoMatch(RBV.mi);
+  else if (!qEl.value.trim() && RBV.searchFrom != null) { const p = RBV.searchFrom; RBV.searchFrom = null; rbGoto(p, null, { noHL: true }); }   // search cancelled: back to where you were
+});
+document.getElementById("rbFindPrev").addEventListener("click", () => gotoMatch(RBV.mi - 1));
+document.getElementById("rbFindNext").addEventListener("click", () => gotoMatch(RBV.mi + 1));
+document.getElementById("rbFindList").addEventListener("click", e => {
+  const open = rbSearchEl.hidden;
+  rbSearchEl.hidden = !open; e.currentTarget.setAttribute("aria-expanded", open);
+  if (open) findList();
+});
+document.getElementById("rbFindClear").addEventListener("click", () => { qEl.value = ""; render(); });
+rbSearchEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-mi]");
+  if (!b) return;
+  rbSearchEl.hidden = true; document.getElementById("rbFindList").setAttribute("aria-expanded", "false");
+  gotoMatch(+b.dataset.mi);
+});
+document.addEventListener("click", e => {
+  if (rbSearchEl.hidden || e.target.closest("#rbsearch, #rbFindList")) return;
+  rbSearchEl.hidden = true; document.getElementById("rbFindList").setAttribute("aria-expanded", "false");
+});
 
 /* navigation */
 document.addEventListener("click", e => {
@@ -1725,7 +1830,7 @@ document.addEventListener("click", e => {
   if (!a) return;
   e.preventDefault();
   const p = +a.dataset.rbp, loc = a.dataset.loc ? a.dataset.loc.split(",").map(Number) : null;
-  const fromToc = a.hasAttribute("data-toc"), fromSearch = !!a.closest("#rbsearch");
+  const fromToc = a.hasAttribute("data-toc"), fromSearch = false;
   if (fromToc) { rbTocEl.classList.remove("open"); document.getElementById("rbTocBtn").setAttribute("aria-expanded", "false"); rbGoto(p, loc, { noHL: true }); return; }
   navGo(() => {
     if (view !== "rulebook") { qEl.value = ""; setView("rulebook"); render(); }
@@ -1854,7 +1959,7 @@ document.getElementById("bnav").addEventListener("click", e => {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.id === "bnBack") { navBack(); return; }
-  if (b.id === "bnSearch") { window.scrollTo(0, 0); qEl.focus({ preventScroll: true }); qEl.select(); return; }
+  if (b.id === "bnSearch") { if (view === "rulebook" && window.RB_READY && RBV.searchFrom == null) RBV.searchFrom = RBV.cur; window.scrollTo(0, 0); qEl.focus({ preventScroll: true }); qEl.select(); return; }
   if (b.dataset.view === view) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
   document.getElementById("tab-" + b.dataset.view).click();
 });
@@ -1879,7 +1984,7 @@ function flashEl(el) { el.classList.remove("flash"); void el.offsetWidth; el.cla
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden) close(); });
 })();
 /* ---------- version and updates ---------- */
-const BUILD = "battles-6f5ed9";
+const BUILD = "2026.10.12-dd872e";
 function showUpdate() { document.getElementById("updToast").hidden = false; }
 document.getElementById("updReload").addEventListener("click", () => location.reload());
 document.getElementById("updClose").addEventListener("click", () => { document.getElementById("updToast").hidden = true; });
@@ -1927,8 +2032,10 @@ if (/^#r(I|II|III|IV|V)-/.test(location.hash)) {
   if (on.has(cid)) { ruleCyc = cid; render(); }
 }
 if (location.hash && !["#kratos", "#rules"].includes(location.hash)) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
-if (view === "rulebook") { rbShow(); const m = location.hash.match(/^#rulebook-p(\d+)/); rbGoto(m ? +m[1] : RBV.cur, null, { noHL: true }); }
-if (!NAV_MEM && history.state && history.state.nav) navRestore(history.state); else navUI();
+// a reload restores the saved place for this history entry; a fresh link to a Rulebook page opens that page
+const START_NAV = !NAV_MEM && history.state && history.state.nav ? history.state : null;
+if (view === "rulebook" && !START_NAV) { rbShow(); const m = location.hash.match(/^#rulebook-p(\d+)/); rbGoto(m ? +m[1] : RBV.cur, null, { noHL: true }); }
+if (START_NAV) navRestore(START_NAV); else navUI();
 </script>
 
 </body>
