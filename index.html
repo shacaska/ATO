@@ -636,7 +636,7 @@ i.bsym { display: inline-block; height: 1.1em; width: calc(1.1em * var(--ar, 1))
     <nav class="rail" id="rail" aria-label="Jump to letter"></nav>
     <main><div class="kfilter" id="kfilter" role="group" aria-label="Show"></div><div id="list"></div></main>
   </div>
-  <footer class="foot">Odyssey Codex · version <span id="buildVer">2026.10.12-d262f7</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
+  <footer class="foot">Odyssey Codex · version <span id="buildVer">battles-c4c62c</span><button type="button" id="chkUpd" hidden>Check for updates</button><span id="updMsg"></span></footer>
 </div>
 <button type="button" class="fback" id="fBack" hidden>← Back</button>
 <nav class="bnav" id="bnav" aria-label="App navigation">
@@ -2028,7 +2028,7 @@ function flashEl(el) { el.classList.remove("flash"); void el.offsetWidth; el.cla
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden) close(); });
 })();
 /* ---------- version and updates ---------- */
-const BUILD = "2026.10.12-d262f7";
+const BUILD = "battles-c4c62c";
 function showUpdate() { document.getElementById("updToast").hidden = false; }
 document.getElementById("updReload").addEventListener("click", () => location.reload());
 document.getElementById("updClose").addEventListener("click", () => { document.getElementById("updToast").hidden = true; });
