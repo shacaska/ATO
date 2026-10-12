@@ -1,6 +1,6 @@
 /* Odyssey Codex service worker: keeps the app usable offline.
    The page itself saves the Rulebook PDF (cache "ato-rulebook-v1") the first time the Rulebook tab is opened. */
-const VERSION = "2026.10.12-dd872e";
+const VERSION = "battles-b04a16";
 const SHELL = "ato-shell-" + VERSION;
 const ASSETS = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
   "icons/favicon-32.png", "vendor/pdfjs/pdf.min.js", "vendor/pdfjs/pdf.worker.min.js"];
